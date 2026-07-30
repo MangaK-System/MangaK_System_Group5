@@ -5,11 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using DalUserRole = MangaK_System.DAL.Entity.Enums.UserRole;
 using DalUserStatus = MangaK_System.DAL.Entity.Enums.UserStatus;
-using Mangak_System._1_DAL.Data;
+using MangaK_System.BLL.User;
 using Mangak_System._1_DAL.Entity;
 
 namespace MangaK_System.GUI.ViewModels.Admin
@@ -82,25 +81,17 @@ namespace MangaK_System.GUI.ViewModels.Admin
             try
             {
                 using var scope = App.ServiceProvider.CreateScope();
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
 
-                // Nạp danh sách Tantou Editors
-                var tantous = await dbContext.Users
-                    .Where(u => u.Role == DalUserRole.Tantou && u.Status == DalUserStatus.Active)
-                    .ToListAsync();
+                // Nạp danh sách Users từ BLL
+                var users = await userService.GetAllUsersAsync();
 
+                // Lọc Tantou Editors
                 TantouEditors.Clear();
-                foreach (var tantou in tantous)
+                foreach (var tantou in users.Where(u => u.Role == DalUserRole.Tantou && u.Status == DalUserStatus.Active))
                 {
                     TantouEditors.Add(tantou);
                 }
-
-                // Nạp danh sách Users kèm thông tin Supervisor
-                var users = await dbContext.Users
-                    .Include(u => u.Supervisor)
-                    .OrderBy(u => u.Role)
-                    .ThenBy(u => u.FirstName)
-                    .ToListAsync();
 
                 UserList.Clear();
                 foreach (var user in users)
@@ -136,16 +127,12 @@ namespace MangaK_System.GUI.ViewModels.Admin
             try
             {
                 using var scope = App.ServiceProvider.CreateScope();
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
 
-                var dbUser = await dbContext.Users.FindAsync(item.User.Id);
-                if (dbUser != null)
+                // Gọi IUserService (BLL) để cập nhật Supervisor
+                bool success = await userService.UpdateSupervisorAsync(item.User.Id, item.SelectedSupervisorId);
+                if (success)
                 {
-                    dbUser.SupervisorId = item.SelectedSupervisorId;
-                    dbUser.UpdatedAt = DateTimeOffset.UtcNow;
-
-                    await dbContext.SaveChangesAsync();
-
                     var assignedTantou = TantouEditors.FirstOrDefault(t => t.Id == item.SelectedSupervisorId);
                     string tantouName = assignedTantou != null
                         ? $"{assignedTantou.FirstName} {assignedTantou.LastName}"
@@ -154,6 +141,10 @@ namespace MangaK_System.GUI.ViewModels.Admin
                     MessageBox.Show($"Supervisor '{tantouName}' assigned for Mangaka '{item.FirstName} {item.LastName}' successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
                     await LoadUsersAsync();
+                }
+                else
+                {
+                    MessageBox.Show("User not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)

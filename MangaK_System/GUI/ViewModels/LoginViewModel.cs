@@ -154,14 +154,14 @@ namespace MangaK_System.GUI.ViewModels
 
                 if (user == null)
                 {
-                    ErrorMessage = "Email hoặc mật khẩu không chính xác.";
+                    ErrorMessage = "Email or password is incorrect";
                     return;
                 }
 
                 // 4. Ánh xạ Role từ DAL sang GUI và kiểm tra quyền truy cập Desktop App
                 if (!TryMapRole(user.Role, out GuiUserRole guiRole, out string roleDisplayName))
                 {
-                    ErrorMessage = "Tài khoản của bạn không có quyền truy cập ứng dụng Desktop.";
+                    ErrorMessage = "Your account is not allowed to access this app.";
                     return;
                 }
 
@@ -186,11 +186,11 @@ namespace MangaK_System.GUI.ViewModels
                 // BLL ném UnauthorizedAccessException khi Email không tồn tại hoặc sai mật khẩu
                 if (ex.Message.Contains("Email not found", StringComparison.OrdinalIgnoreCase))
                 {
-                    ErrorMessage = "Email không tồn tại trong hệ thống.";
+                    ErrorMessage = "Email not found in the system.";
                 }
                 else if (ex.Message.Contains("Incorrect password", StringComparison.OrdinalIgnoreCase))
                 {
-                    ErrorMessage = "Mật khẩu không chính xác.";
+                    ErrorMessage = "Incorrect password.";
                 }
                 else
                 {
@@ -203,7 +203,7 @@ namespace MangaK_System.GUI.ViewModels
             }
             catch (Exception ex)
             {
-                ErrorMessage = $"Đã xảy ra lỗi hệ thống: {ex.Message}";
+                ErrorMessage = $"System error: {ex.Message}";
             }
             finally
             {

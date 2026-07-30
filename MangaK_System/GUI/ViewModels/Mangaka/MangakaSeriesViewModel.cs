@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
@@ -40,7 +41,6 @@ namespace MangaK_System.GUI.ViewModels.Mangaka
             OpenCreateSeriesCommand = new RelayCommand(_ => ExecuteOpenCreateSeries());
             ViewDetailsCommand = new RelayCommand(param => ExecuteViewDetails(param as GetAllSeriesResponse));
 
-            // Load data when initialized
             _ = LoadSeriesAsync();
         }
 
@@ -66,6 +66,7 @@ namespace MangaK_System.GUI.ViewModels.Mangaka
                 using var scope = App.ServiceProvider.CreateScope();
                 var seriesService = scope.ServiceProvider.GetRequiredService<ISeriesService>();
 
+                // Gọi thuần túy ISeriesService của BLL
                 var list = await seriesService.GetAllSeriesAsync(UserSession.CurrentUser.Id);
 
                 SeriesList.Clear();
@@ -120,13 +121,13 @@ namespace MangaK_System.GUI.ViewModels.Mangaka
                 string? nameFileUrl = null;
                 string? nameFilePublicId = null;
 
-                // 1. Upload Cover Image sang Cloudinary nếu người dùng đã chọn file
+                // 1. Upload Cover Image qua MediaService (BLL)
                 if (!string.IsNullOrWhiteSpace(localCoverPath))
                 {
                     coverUrl = await mediaService.UploadImageAsync(localCoverPath);
                 }
 
-                // 2. Upload Name/Manuscript file sang Cloudinary nếu có
+                // 2. Upload Name File qua MediaService (BLL)
                 if (!string.IsNullOrWhiteSpace(localNameFilePath))
                 {
                     var result = await mediaService.UploadFileAsync(localNameFilePath);
@@ -134,7 +135,7 @@ namespace MangaK_System.GUI.ViewModels.Mangaka
                     nameFilePublicId = result.PublicId;
                 }
 
-                // 3. Tạo Series trong DB với URL file đã upload
+                // 3. Gọi ISeriesService.CreateSeriesAsync trong BLL
                 await seriesService.CreateSeriesAsync(
                     title: title,
                     description: description,
@@ -144,7 +145,7 @@ namespace MangaK_System.GUI.ViewModels.Mangaka
                     createdById: UserSession.CurrentUser.Id
                 );
 
-                MessageBox.Show($"Series '{title}' created and uploaded successfully! Submitted to Tantou Editor for review.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Series '{title}' created successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 await LoadSeriesAsync();
             }
