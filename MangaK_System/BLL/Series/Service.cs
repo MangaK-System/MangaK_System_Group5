@@ -93,6 +93,9 @@ namespace MangaK_System.BLL.Series
             if (series.ReviewedById != null && series.ReviewedById != editorId)
                 throw new UnauthorizedAccessException("This series is already being handled by another Tantou Editor.");
 
+            if (!isApproved && string.IsNullOrWhiteSpace(note))
+                throw new ArgumentException("Feedback note is required when rejecting a series.");
+
             if (isApproved)
             {
                 series.Status = SeriesStatus.Pending;
@@ -157,6 +160,9 @@ namespace MangaK_System.BLL.Series
 
             if(series.Status != SeriesStatus.Pending)
                 throw new InvalidOperationException($"Series must be pending review from Tantou Editor first. Current: {series.Status}");
+
+            if (!isApproved && string.IsNullOrWhiteSpace(note))
+                throw new ArgumentException("Feedback note is required when rejecting a series.");
 
             if (isApproved)
             {
