@@ -1,0 +1,336 @@
+<UserControl
+    x:Class="MangaK_System.GUI.Views.Components.SidebarControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="clr-namespace:MangaK_System.GUI.ViewModels">
+
+    <!--
+    ╔══════════════════════════════════════════════════════════╗
+    ║         COMPONENT: SidebarControl                       ║
+    ╚══════════════════════════════════════════════════════════╝
+    Thanh điều hướng bên trái – tương đương Sidebar.jsx.
+
+    Tính năng:
+      - Hiển thị Logo + danh sách menu items theo role
+      - Thu gọn (chỉ icon) / mở rộng (icon + chữ) bằng nút toggle
+      - Item đang active được highlight màu tím
+
+    DataContext: SidebarViewModel
+    -->
+
+    <UserControl.Resources>
+        <!-- ═══════════════════════════════════
+             STYLE: Menu item bình thường
+        ═══════════════════════════════════ -->
+        <Style x:Key="SidebarItemStyle" TargetType="Button">
+            <Setter Property="Background"      Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding"         Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="itemBorder"
+                                Background="Transparent"
+                                CornerRadius="8"
+                                Padding="10,9">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="itemBorder" Property="Background" Value="#2A2A3E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ═══════════════════════════════════
+             STYLE: Menu item đang ACTIVE (tím)
+        ═══════════════════════════════════ -->
+        <Style x:Key="SidebarItemActiveStyle" TargetType="Button"
+               BasedOn="{StaticResource SidebarItemStyle}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="itemBorder"
+                                CornerRadius="8"
+                                Padding="10,9">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="#7C5CBF" Offset="0"/>
+                                    <GradientStop Color="#5E3F9E" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <ContentPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ═══════════════════════════════════
+             DATA TEMPLATE: Render từng MenuItem
+             (IsCollapsed = false → hiện icon + chữ)
+        ═══════════════════════════════════ -->
+        <DataTemplate x:Key="MenuItemExpandedTemplate" DataType="{x:Type vm:MenuItem}">
+            <Button Command="{Binding DataContext.SelectItemCommand,
+                              RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    CommandParameter="{Binding}"
+                    Style="{Binding IsActive,
+                            Converter={StaticResource BoolToStyleConverter},
+                            ConverterParameter='SidebarItemActiveStyle|SidebarItemStyle'}"
+                    HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Icon -->
+                    <TextBlock Text="{Binding IconGlyph}"
+                               FontSize="16"
+                               Width="24"
+                               TextAlignment="Center"
+                               VerticalAlignment="Center"
+                               Foreground="White"
+                               Margin="0,0,10,0"/>
+                    <!-- Label -->
+                    <TextBlock Text="{Binding Label}"
+                               FontSize="13"
+                               Foreground="White"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"/>
+                </StackPanel>
+            </Button>
+        </DataTemplate>
+
+        <!-- DataTemplate khi thu gọn (chỉ icon) -->
+        <DataTemplate x:Key="MenuItemCollapsedTemplate" DataType="{x:Type vm:MenuItem}">
+            <Button Command="{Binding DataContext.SelectItemCommand,
+                              RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    CommandParameter="{Binding}"
+                    HorizontalAlignment="Stretch"
+                    ToolTip="{Binding Label}">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource SidebarItemStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border CornerRadius="8" Padding="10,9">
+                                                <Border.Background>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                        <GradientStop Color="#7C5CBF" Offset="0"/>
+                                                        <GradientStop Color="#5E3F9E" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
+                                                <ContentPresenter/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <!-- Chỉ hiện icon khi collapsed -->
+                <TextBlock Text="{Binding IconGlyph}"
+                           FontSize="18"
+                           TextAlignment="Center"
+                           Foreground="White"
+                           HorizontalAlignment="Center"/>
+            </Button>
+        </DataTemplate>
+
+    </UserControl.Resources>
+
+    <!--
+    Sidebar: nền tối #0F0F1A, chiều rộng bind SidebarWidth
+    Tương đương div có class "manga-sidebar bg-sidebar" trong Sidebar.jsx
+    -->
+    <Border Background="#0F0F1A"
+            Width="{Binding SidebarWidth}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <!-- Logo + tên -->
+                <RowDefinition Height="64"/>
+                <!-- Danh sách menu -->
+                <RowDefinition Height="*"/>
+                <!-- Nút toggle ở đáy -->
+                <RowDefinition Height="48"/>
+            </Grid.RowDefinitions>
+
+            <!-- ─── Logo ─── -->
+            <Border Grid.Row="0"
+                    Padding="12,0"
+                    BorderBrush="#1A1A2E"
+                    BorderThickness="0,0,0,1">
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left">
+                    <!-- Logo icon (chữ M màu tím) -->
+                    <Border Background="#7C5CBF"
+                            CornerRadius="6"
+                            Width="28" Height="28"
+                            Margin="0,0,8,0">
+                        <TextBlock Text="M"
+                                   FontSize="15"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+
+                    <!-- Tên app – chỉ hiện khi không collapsed -->
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsCollapsed}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <TextBlock Text="Manga"
+                                   FontSize="16" FontWeight="Bold"
+                                   Foreground="White"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="K"
+                                   FontSize="16" FontWeight="Bold"
+                                   Foreground="#F5A623"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- ─── Menu Items ─── -->
+            <ScrollViewer Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled"
+                          Padding="8,8,8,0">
+                <ItemsControl ItemsSource="{Binding MenuItems}">
+                    <ItemsControl.Style>
+                        <Style TargetType="ItemsControl"/>
+                    </ItemsControl.Style>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <!-- Chọn template theo trạng thái collapsed -->
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:MenuItem}">
+                            <Button Margin="0,1"
+                                    Command="{Binding DataContext.SelectItemCommand,
+                                              RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
+                                    ToolTip="{Binding Label}"
+                                    BorderThickness="0"
+                                    Cursor="Hand"
+                                    Padding="0">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="menuItemBorder"
+                                                Background="Transparent"
+                                                CornerRadius="8"
+                                                Padding="10,9">
+                                            <!-- Layout: icon luôn hiện, chữ chỉ hiện khi mở rộng -->
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding IconGlyph}"
+                                                           FontSize="16"
+                                                           Width="22"
+                                                           TextAlignment="Center"
+                                                           Foreground="White"
+                                                           VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding Label}"
+                                                           FontSize="13"
+                                                           Foreground="White"
+                                                           VerticalAlignment="Center"
+                                                           Margin="10,0,0,0"
+                                                           TextTrimming="CharacterEllipsis">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding DataContext.IsCollapsed,
+                                                                             RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                             Value="True">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <!-- Hover -->
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="menuItemBorder" Property="Background" Value="#1E1E30"/>
+                                            </Trigger>
+                                            <!-- Active (item đang chọn) -->
+                                            <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                                <Setter TargetName="menuItemBorder" Property="Background">
+                                                    <Setter.Value>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                            <GradientStop Color="#7C5CBF" Offset="0"/>
+                                                            <GradientStop Color="#5E3F9E" Offset="1"/>
+                                                        </LinearGradientBrush>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <!-- ─── Nút toggle thu gọn/mở rộng ─── -->
+            <!--
+            Tương đương nút ChevronLeft/ChevronRight ở phía phải Sidebar trong Sidebar.jsx.
+            Ở desktop app, đặt ở đáy sidebar cho gọn.
+            -->
+            <Button Grid.Row="2"
+                    Command="{Binding ToggleCollapseCommand}"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    Margin="8,4,8,8">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="toggleBorder"
+                                Background="Transparent"
+                                CornerRadius="8"
+                                Padding="10,8">
+                            <!-- Mũi tên: ← khi mở rộng, → khi thu gọn -->
+                            <TextBlock HorizontalAlignment="Center"
+                                       Foreground="#6B7280"
+                                       FontSize="14">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="◀"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsCollapsed}" Value="True">
+                                                <Setter Property="Text" Value="▶"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="toggleBorder" Property="Background" Value="#1E1E30"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+        </Grid>
+    </Border>
+</UserControl>

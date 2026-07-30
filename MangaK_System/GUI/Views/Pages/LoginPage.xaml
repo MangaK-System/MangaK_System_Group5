@@ -1,0 +1,474 @@
+<UserControl
+    x:Class="MangaK_System.GUI.Views.Pages.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:components="clr-namespace:MangaK_System.GUI.Views.Components">
+
+    <!--
+    ╔══════════════════════════════════════════════════════════╗
+    ║              PAGE: LoginPage (Trang Đăng Nhập)          ║
+    ╚══════════════════════════════════════════════════════════╝
+    Bố cục 2 cột:
+      - Cột trái (40%): Panel tối với logo, mô tả, và tính năng hệ thống
+      - Cột phải (60%): Form đăng nhập trên nền sáng có lưới grid
+
+    DataContext: LoginViewModel
+    -->
+
+    <!-- Nền ngoài cùng (màu sáng) -->
+    <Grid Background="#F0EDF8">
+        <Grid.ColumnDefinitions>
+            <!-- Cột trái – panel tối -->
+            <ColumnDefinition Width="0.45*"/>
+            <!-- Cột phải – form đăng nhập -->
+            <ColumnDefinition Width="0.55*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ═══════════════════════════════════════════════
+             CỘT TRÁI: Panel tối
+        ═══════════════════════════════════════════════ -->
+        <Grid Grid.Column="0" Background="#0F0F1A">
+
+            <!-- Logo ở góc trên trái -->
+            <components:LogoBrand VerticalAlignment="Top"
+                                  HorizontalAlignment="Left"
+                                  Margin="32,28,0,0"/>
+
+            <!-- Nội dung giữa panel -->
+            <StackPanel VerticalAlignment="Center"
+                        Margin="40,0,40,0">
+
+                <!-- Tiêu đề -->
+                <TextBlock TextWrapping="Wrap"
+                           FontSize="34"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           LineHeight="44"
+                           Margin="0,0,0,12">
+                    <Run Text="Create your own"/>
+                    <LineBreak/>
+                    <!-- Dòng 2 màu cam nhấn -->
+                    <Run Text="Manga Universe" Foreground="#F5A623"/>
+                </TextBlock>
+
+                <!-- Mô tả ngắn -->
+                <TextBlock Text="A collaborative platform designed to streamline drawing tasks, review drafts, and manage publishing schedules in real-time."
+                           TextWrapping="Wrap"
+                           FontSize="13"
+                           Foreground="#9CA3AF"
+                           LineHeight="20"
+                           Margin="0,0,0,32"/>
+
+                <!-- Card "System Features" -->
+                <Border Background="#1A1A2E"
+                        CornerRadius="12"
+                        Padding="16,14">
+
+                    <!-- Label "SYSTEM FEATURES" -->
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                            <!-- Chấm xanh lá -->
+                            <Ellipse Width="8" Height="8"
+                                     Fill="#22C55E"
+                                     VerticalAlignment="Center"
+                                     Margin="0,0,8,0"/>
+                            <TextBlock Text="SYSTEM FEATURES"
+                                       FontSize="10"
+                                       FontWeight="SemiBold"
+                                       Foreground="#6B7280"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- 2 tính năng trong grid -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Tính năng 1: 5+ Roles -->
+                            <Border Grid.Column="0"
+                                    Background="#0F0F1A"
+                                    CornerRadius="8"
+                                    Padding="12,10">
+                                <StackPanel>
+                                    <TextBlock Text="5+ Roles"
+                                               FontSize="14"
+                                               FontWeight="Bold"
+                                               Foreground="White"/>
+                                    <TextBlock Text="Granular Permissions"
+                                               FontSize="11"
+                                               Foreground="#6B7280"
+                                               Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Tính năng 2: Integrated system -->
+                            <Border Grid.Column="2"
+                                    Background="#0F0F1A"
+                                    CornerRadius="8"
+                                    Padding="12,10">
+                                <StackPanel>
+                                    <TextBlock Text="Integrated system"
+                                               FontSize="14"
+                                               FontWeight="Bold"
+                                               Foreground="White"/>
+                                    <TextBlock Text="Real-time Tracking"
+                                               FontSize="11"
+                                               Foreground="#6B7280"
+                                               Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </Grid>
+
+        <!-- ═══════════════════════════════════════════════
+             CỘT PHẢI: Form đăng nhập
+        ═══════════════════════════════════════════════ -->
+        <Grid Grid.Column="1">
+
+            <!-- Nền có lưới chấm (dot grid background) -->
+            <Grid.Background>
+                <DrawingBrush TileMode="Tile"
+                              Viewport="0,0,24,24"
+                              ViewportUnits="Absolute">
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <GeometryDrawing Brush="#F0EDF8">
+                                <GeometryDrawing.Geometry>
+                                    <RectangleGeometry Rect="0,0,24,24"/>
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                            <!-- Chấm nhỏ tạo pattern lưới -->
+                            <GeometryDrawing Brush="#C4B8D8">
+                                <GeometryDrawing.Geometry>
+                                    <EllipseGeometry Center="12,12" RadiusX="1" RadiusY="1"/>
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Grid.Background>
+
+            <!-- Nút "Back to Home" ở góc trên phải -->
+            <Button HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Margin="0,20,24,0"
+                    Command="{Binding BackToHomeCommand}"
+                    Background="White"
+                    BorderBrush="#E5E7EB"
+                    BorderThickness="1"
+                    Cursor="Hand"
+                    Padding="0">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="backBorder"
+                                Background="White"
+                                BorderBrush="#E5E7EB"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="14,8">
+                            <StackPanel Orientation="Horizontal">
+                                <!-- Mũi tên ← -->
+                                <TextBlock Text="←"
+                                           FontSize="13"
+                                           Foreground="#374151"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,6,0"/>
+                                <TextBlock Text="Back to Home"
+                                           FontSize="13"
+                                           Foreground="#374151"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="backBorder" Property="Background" Value="#F9FAFB"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <!-- Card form đăng nhập – căn giữa màn hình -->
+            <Border HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="White"
+                    CornerRadius="16"
+                    Padding="40,36"
+                    MinWidth="400"
+                    MaxWidth="480">
+                <Border.Effect>
+                    <DropShadowEffect Color="#000000"
+                                      Opacity="0.08"
+                                      BlurRadius="30"
+                                      ShadowDepth="8"
+                                      Direction="270"/>
+                </Border.Effect>
+
+                <StackPanel>
+
+                    <!-- ─── Tiêu đề form ─── -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                        <TextBlock Text="Sign in to Manga"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="#1A1A2E"
+                                   VerticalAlignment="Bottom"/>
+                        <!-- Chữ "K" màu cam -->
+                        <TextBlock Text="K"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="#F5A623"
+                                   VerticalAlignment="Bottom"/>
+                    </StackPanel>
+
+                    <TextBlock Text="Enter your credentials below to access the system"
+                               FontSize="13"
+                               Foreground="#6B7280"
+                               Margin="0,0,0,28"/>
+
+                    <!-- ─── Trường EMAIL ─── -->
+                    <TextBlock Text="EMAIL"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="#374151"
+                               Margin="0,0,0,6"/>
+
+                    <!-- Wrapper input email với icon người dùng -->
+                    <Border Background="#F0EDF8"
+                            CornerRadius="8"
+                            Margin="0,0,0,18">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <!-- Icon -->
+                                <ColumnDefinition Width="40"/>
+                                <!-- TextBox -->
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Icon người dùng (unicode) -->
+                            <TextBlock Grid.Column="0"
+                                       Text="&#x1F464;"
+                                       FontSize="13"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Opacity="0.5"/>
+
+                            <!-- TextBox Email -->
+                            <TextBox Grid.Column="1"
+                                     x:Name="EmailTextBox"
+                                     Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     FontSize="14"
+                                     Foreground="#1A1A2E"
+                                     Padding="0,12,12,12"
+                                     VerticalContentAlignment="Center">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Style.Triggers>
+                                            <!-- Placeholder "Enter email" khi trống -->
+                                            <Trigger Property="Text" Value="">
+                                                <Setter Property="Background">
+                                                    <Setter.Value>
+                                                        <VisualBrush AlignmentX="Left"
+                                                                     AlignmentY="Center"
+                                                                     Stretch="None">
+                                                            <VisualBrush.Visual>
+                                                                <TextBlock Text="Enter email"
+                                                                           Foreground="#9CA3AF"
+                                                                           FontSize="14"
+                                                                           Margin="2,0,0,0"/>
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                        </Grid>
+                    </Border>
+
+                    <!-- ─── Trường PASSWORD ─── -->
+                    <TextBlock Text="PASSWORD"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="#374151"
+                               Margin="0,0,0,6"/>
+
+                    <!-- Wrapper input password với icon khoá và toggle ẩn/hiện -->
+                    <Border Background="#F0EDF8"
+                            CornerRadius="8"
+                            Margin="0,0,0,6">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <!-- Icon khoá -->
+                                <ColumnDefinition Width="40"/>
+                                <!-- Input -->
+                                <ColumnDefinition Width="*"/>
+                                <!-- Nút toggle -->
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Icon khoá (unicode) -->
+                            <TextBlock Grid.Column="0"
+                                       Text="&#x1F512;"
+                                       FontSize="13"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Opacity="0.5"/>
+
+                            <!--
+                            PasswordBox: hiển thị khi IsPasswordVisible = false
+                            Lưu ý: PasswordBox không hỗ trợ binding Text trực tiếp.
+                            Xử lý lấy giá trị qua PasswordChanged event ở code-behind.
+                            -->
+                            <PasswordBox Grid.Column="1"
+                                         x:Name="PasswordBox"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         FontSize="14"
+                                         Foreground="#1A1A2E"
+                                         Padding="0,12,0,12"
+                                         VerticalContentAlignment="Center"
+                                         PasswordChar="●">
+                                <PasswordBox.Style>
+                                    <Style TargetType="PasswordBox">
+                                        <!-- Ẩn khi đang ở chế độ hiện mật khẩu -->
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsPasswordVisible}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </PasswordBox.Style>
+                            </PasswordBox>
+
+                            <!--
+                            TextBox: hiển thị khi IsPasswordVisible = true
+                            (để người dùng xem được mật khẩu)
+                            -->
+                            <TextBox Grid.Column="1"
+                                     Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     FontSize="14"
+                                     Foreground="#1A1A2E"
+                                     Padding="0,12,0,12"
+                                     VerticalContentAlignment="Center">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <!-- Ẩn khi đang ở chế độ ẩn mật khẩu -->
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsPasswordVisible}" Value="False">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+
+                            <!-- Nút toggle hiện/ẩn mật khẩu (icon mắt) -->
+                            <Button Grid.Column="2"
+                                    Command="{Binding TogglePasswordVisibilityCommand}"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Cursor="Hand"
+                                    Padding="0">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="Transparent"
+                                                Padding="8">
+                                            <TextBlock x:Name="eyeIcon"
+                                                       Text="&#x1F441;"
+                                                       FontSize="14"
+                                                       Opacity="0.5"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="eyeIcon" Property="Opacity" Value="1"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+
+                        </Grid>
+                    </Border>
+
+                    <!-- Thông báo lỗi (chỉ hiện khi có lỗi) -->
+                    <TextBlock Text="{Binding ErrorMessage}"
+                               Foreground="#EF4444"
+                               FontSize="12"
+                               Margin="0,8,0,0"
+                               TextWrapping="Wrap">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <!-- Ẩn khi ErrorMessage rỗng -->
+                                    <Trigger Property="Text" Value="">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <!-- Khoảng cách trước nút Log In -->
+                    <Rectangle Height="20"/>
+
+                    <!-- ─── Nút Log In ─── -->
+                    <Button Content="Log In"
+                            Command="{Binding LoginCommand}"
+                            Height="46"
+                            FontSize="15"
+                            FontWeight="SemiBold"
+                            Foreground="White"
+                            Cursor="Hand"
+                            BorderThickness="0">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="loginBorder"
+                                        CornerRadius="8">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#7C5CBF" Offset="0"/>
+                                            <GradientStop Color="#9B7DD4" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="loginBorder" Property="Opacity" Value="0.88"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="loginBorder" Property="Opacity" Value="0.75"/>
+                                    </Trigger>
+                                    <!-- Làm mờ nút khi đang loading -->
+                                    <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                        <Setter TargetName="loginBorder" Property="Opacity" Value="0.6"/>
+                                    </DataTrigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                </StackPanel>
+            </Border>
+        </Grid>
+
+    </Grid>
+</UserControl>
