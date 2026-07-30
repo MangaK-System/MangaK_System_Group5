@@ -14,6 +14,7 @@ using SeriesService = MangaK_System.BLL.Series;
 using PublishingScheduleService = MangaK_System.BLL.PublishingSchedule;
 using UserService = MangaK_System.BLL.User;
 using FeedbackService = MangaK_System.BLL.Feedback;
+using CategoryService = MangaK_System.BLL.Category;
 
 namespace MangaK_System
 {
@@ -48,6 +49,7 @@ namespace MangaK_System
             services.AddScoped<MediaService.IService, CloudinaryService.Service>();
             services.AddScoped<UserService.IUserService, UserService.UserService>();
             services.AddScoped<FeedbackService.IFeedbackService, FeedbackService.FeedbackService>();
+            services.AddScoped<CategoryService.IService, CategoryService.Service>();
             //==============================
             ServiceProvider = services.BuildServiceProvider();
 
