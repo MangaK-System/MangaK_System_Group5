@@ -1,0 +1,356 @@
+<UserControl
+    x:Class="MangaK_System.GUI.Views.Pages.LandingPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:components="clr-namespace:MangaK_System.GUI.Views.Components"
+    Background="#F2F0F7">
+
+    <!--
+    ╔══════════════════════════════════════════════════════════╗
+    ║              PAGE: LandingPage (Trang Chủ)              ║
+    ╚══════════════════════════════════════════════════════════╝
+    Trang Landing hiển thị giới thiệu nền tảng MangaK.
+    
+    Bố cục (từ trên xuống):
+      1. Navbar (Logo bên trái)
+      2. Hero Section (ảnh bên trái, nội dung bên phải)
+      3. Footer
+    
+    DataContext: LandingViewModel
+    -->
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Hàng navbar -->
+            <RowDefinition Height="64"/>
+            <!-- Hàng hero – chiếm hết không gian còn lại -->
+            <RowDefinition Height="*"/>
+            <!-- Hàng footer -->
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <!-- ═══════════════════════════════════════════════
+             NAVBAR – Hàng 0
+        ═══════════════════════════════════════════════ -->
+        <Border Grid.Row="0"
+                Background="#F2F0F7"
+                Padding="32,0">
+            <Grid>
+                <!-- Logo bên trái -->
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                    <!--
+                    Dùng nền màu tối phía sau logo
+                    vì logo có text màu trắng
+                    -->
+                    <Border Background="#1A1A2E"
+                            CornerRadius="6"
+                            Padding="8,4">
+                        <components:LogoBrand />
+                    </Border>
+                </StackPanel>
+
+                <!--
+                    Không có nút Reader Login theo yêu cầu.
+                    Phần HorizontalAlignment="Right" để trống.
+                -->
+            </Grid>
+        </Border>
+
+        <!-- ═══════════════════════════════════════════════
+             HERO SECTION – Hàng 1
+             Layout: [Cột ảnh (45%)] | [Cột nội dung (55%)]
+        ═══════════════════════════════════════════════ -->
+        <Grid Grid.Row="1" Margin="32,20,32,20">
+            <Grid.ColumnDefinitions>
+                <!-- Cột ảnh bên trái -->
+                <ColumnDefinition Width="0.95*"/>
+                <!-- Cột nội dung bên phải -->
+                <ColumnDefinition Width="1.05*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- ─── CỘT TRÁI: Lưới ảnh Manga (3 cột × 2 hàng) ─── -->
+            <Grid Grid.Column="0" Margin="0,0,24,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!--
+                Ảnh 1: Chiếm cả cột trái (rowspan 2) – ảnh manga vẽ tay
+                Dùng Rectangle + màu placeholder vì chưa có ảnh thực
+                -->
+                <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                        Margin="4"
+                        CornerRadius="12"
+                        ClipToBounds="True">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#B8B0C8" Offset="0"/>
+                            <GradientStop Color="#8E84A8" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <!-- Placeholder text -->
+                    <TextBlock Text="🎨"
+                               FontSize="48"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Opacity="0.4"/>
+                </Border>
+
+                <!-- Ảnh 2: Cột phải, hàng trên -->
+                <Border Grid.Column="1" Grid.Row="0"
+                        Margin="4"
+                        CornerRadius="12"
+                        ClipToBounds="True">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#C8B8A8" Offset="0"/>
+                            <GradientStop Color="#A89070" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <TextBlock Text="📖"
+                               FontSize="36"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Opacity="0.4"/>
+                </Border>
+
+                <!-- Ảnh 3: Cột phải, hàng giữa -->
+                <Border Grid.Column="1" Grid.Row="1"
+                        Margin="4"
+                        CornerRadius="12"
+                        ClipToBounds="True">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#A8B8C8" Offset="0"/>
+                            <GradientStop Color="#7090A8" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <TextBlock Text="✏️"
+                               FontSize="36"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Opacity="0.4"/>
+                </Border>
+
+                <!-- Ảnh 4: Cột trái, hàng dưới -->
+                <Border Grid.Column="0" Grid.Row="2"
+                        Margin="4"
+                        CornerRadius="12"
+                        ClipToBounds="True">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#C8A8B8" Offset="0"/>
+                            <GradientStop Color="#A87090" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <TextBlock Text="🖊️"
+                               FontSize="36"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Opacity="0.4"/>
+                </Border>
+
+                <!-- Ảnh 5: Cột phải, hàng dưới -->
+                <Border Grid.Column="1" Grid.Row="2"
+                        Margin="4"
+                        CornerRadius="12"
+                        ClipToBounds="True">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#B8C8A8" Offset="0"/>
+                            <GradientStop Color="#8AA870" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <TextBlock Text="🎭"
+                               FontSize="36"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Opacity="0.4"/>
+                </Border>
+            </Grid>
+
+            <!-- ─── CỘT PHẢI: Nội dung hero ─── -->
+            <StackPanel Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Margin="32,0,16,0">
+
+                <!-- Badge nhãn nền tảng -->
+                <Border Background="#E8E0F0"
+                        CornerRadius="20"
+                        Padding="14,6"
+                        HorizontalAlignment="Left"
+                        Margin="0,0,0,20">
+                    <TextBlock Text="MANGA PRODUCTION &amp; PUBLISHING MANAGEMENT PLATFORM"
+                               FontSize="10"
+                               FontWeight="SemiBold"
+                               Foreground="#7C5CBF"/>
+                </Border>
+
+                <!-- Tiêu đề lớn: Professional Manga -->
+                <TextBlock Text="Professional Manga"
+                           FontSize="42"
+                           FontWeight="ExtraBold"
+                           Foreground="#1A1A2E"
+                           LineHeight="52"
+                           TextWrapping="Wrap"/>
+
+                <!-- Dòng 2 tiêu đề: Creative Workflow (màu tím) -->
+                <TextBlock Text="Creative Workflow"
+                           FontSize="42"
+                           FontWeight="ExtraBold"
+                           Foreground="#7C5CBF"
+                           LineHeight="52"
+                           Margin="0,0,0,20"
+                           TextWrapping="Wrap"/>
+
+                <!-- Mô tả ngắn -->
+                <TextBlock TextWrapping="Wrap"
+                           MaxWidth="420"
+                           FontSize="14"
+                           Foreground="#6B7280"
+                           LineHeight="22"
+                           Margin="0,0,0,32"
+                           Text="A comprehensive platform for managing manga production and publishing workflows — from sketching, coloring, to publication — supporting efficient collaboration between Mangakas and Assistants."/>
+
+                <!-- Nút Enter System -->
+                <Button Content="Enter System"
+                        Command="{Binding EnterSystemCommand}"
+                        HorizontalAlignment="Left"
+                        Width="180" Height="46"
+                        FontSize="15"
+                        FontWeight="SemiBold"
+                        Foreground="White"
+                        Cursor="Hand">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="btnBorder"
+                                    CornerRadius="8">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="#1A1A2E" Offset="0"/>
+                                        <GradientStop Color="#2D2B55" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="btnBorder" Property="Opacity" Value="0.85"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="btnBorder" Property="Opacity" Value="0.70"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <!-- ─── Khu vực thống kê ─── -->
+                <Border Margin="0,32,0,0"
+                        Background="White"
+                        CornerRadius="16"
+                        Padding="24,16">
+                    <Border.Effect>
+                        <DropShadowEffect Color="#000000"
+                                          Opacity="0.06"
+                                          BlurRadius="20"
+                                          ShadowDepth="4"
+                                          Direction="270"/>
+                    </Border.Effect>
+
+                    <!-- 3 cột thống kê -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <!-- Đường kẻ dọc phân cách -->
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Thống kê 1: Mangakas -->
+                        <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding MangakaCount}"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Foreground="#1A1A2E"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="MANGAKAS"
+                                       FontSize="10"
+                                       FontWeight="SemiBold"
+                                       Foreground="#6B7280"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,2,0,0"/>
+                        </StackPanel>
+
+                        <!-- Đường kẻ dọc 1 -->
+                        <Rectangle Grid.Column="1"
+                                   Fill="#E5E7EB"
+                                   Width="1"/>
+
+                        <!-- Thống kê 2: Assistants -->
+                        <StackPanel Grid.Column="2" HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding AssistantCount}"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Foreground="#1A1A2E"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="ASSISTANTS"
+                                       FontSize="10"
+                                       FontWeight="SemiBold"
+                                       Foreground="#6B7280"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,2,0,0"/>
+                        </StackPanel>
+
+                        <!-- Đường kẻ dọc 2 -->
+                        <Rectangle Grid.Column="3"
+                                   Fill="#E5E7EB"
+                                   Width="1"/>
+
+                        <!-- Thống kê 3: Published Works -->
+                        <StackPanel Grid.Column="4" HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding PublishedWorksCount}"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Foreground="#1A1A2E"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="PUBLISHED WORKS"
+                                       FontSize="10"
+                                       FontWeight="SemiBold"
+                                       Foreground="#6B7280"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,2,0,0"/>
+                        </StackPanel>
+
+                    </Grid>
+                </Border>
+
+            </StackPanel>
+        </Grid>
+
+        <!-- ═══════════════════════════════════════════════
+             FOOTER – Hàng 2
+        ═══════════════════════════════════════════════ -->
+        <Border Grid.Row="2"
+                BorderBrush="#E5E7EB"
+                BorderThickness="0,1,0,0">
+            <TextBlock Text="© 2026 MangaK Management System. All rights reserved."
+                       FontSize="12"
+                       Foreground="#9CA3AF"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+        </Border>
+
+    </Grid>
+</UserControl>

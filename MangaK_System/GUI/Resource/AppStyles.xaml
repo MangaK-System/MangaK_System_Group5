@@ -1,0 +1,266 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+    ╔══════════════════════════════════════════════════════╗
+    ║           RESOURCE DICTIONARY – STYLE CHUNG         ║
+    ╚══════════════════════════════════════════════════════╝
+    File này định nghĩa toàn bộ màu sắc, font, và style tái sử dụng
+    trong toàn bộ ứng dụng (tương tự design tokens trong CSS).
+    
+    Cách dùng: Khai báo trong App.xaml → MergedDictionaries
+    -->
+
+    <!-- ═══════════════════════════════════════════════════
+         BẢNG MÀU (Color Palette)
+    ═══════════════════════════════════════════════════ -->
+
+    <!-- Màu nền chính – tím nhạt rất nhẹ -->
+    <Color x:Key="BackgroundLightColor">#F2F0F7</Color>
+    <!-- Màu nền tối cho panel bên trái LoginPage -->
+    <Color x:Key="BackgroundDarkColor">#0F0F1A</Color>
+    <!-- Màu chủ đạo – tím -->
+    <Color x:Key="PrimaryColor">#7C5CBF</Color>
+    <!-- Màu chủ đạo nhạt hơn -->
+    <Color x:Key="PrimaryLightColor">#9B7DD4</Color>
+    <!-- Màu nhấn – cam/vàng (cho chữ "K" và highlight) -->
+    <Color x:Key="AccentColor">#F5A623</Color>
+    <!-- Màu text chính -->
+    <Color x:Key="TextPrimaryColor">#1A1A2E</Color>
+    <!-- Màu text phụ -->
+    <Color x:Key="TextSecondaryColor">#6B7280</Color>
+    <!-- Màu text trắng (trên nền tối) -->
+    <Color x:Key="TextWhiteColor">#FFFFFF</Color>
+    <!-- Màu viền input -->
+    <Color x:Key="BorderColor">#E5E7EB</Color>
+    <!-- Màu nền input -->
+    <Color x:Key="InputBackgroundColor">#F0EDF8</Color>
+    <!-- Màu nền card trắng -->
+    <Color x:Key="CardBackgroundColor">#FFFFFF</Color>
+    <!-- Màu lỗi -->
+    <Color x:Key="ErrorColor">#EF4444</Color>
+
+    <!-- ═══════════════════════════════════════════════════
+         SOLID COLOR BRUSHES
+    ═══════════════════════════════════════════════════ -->
+    <SolidColorBrush x:Key="BackgroundLightBrush"   Color="{StaticResource BackgroundLightColor}" />
+    <SolidColorBrush x:Key="BackgroundDarkBrush"    Color="{StaticResource BackgroundDarkColor}" />
+    <SolidColorBrush x:Key="PrimaryBrush"           Color="{StaticResource PrimaryColor}" />
+    <SolidColorBrush x:Key="PrimaryLightBrush"      Color="{StaticResource PrimaryLightColor}" />
+    <SolidColorBrush x:Key="AccentBrush"            Color="{StaticResource AccentColor}" />
+    <SolidColorBrush x:Key="TextPrimaryBrush"       Color="{StaticResource TextPrimaryColor}" />
+    <SolidColorBrush x:Key="TextSecondaryBrush"     Color="{StaticResource TextSecondaryColor}" />
+    <SolidColorBrush x:Key="TextWhiteBrush"         Color="{StaticResource TextWhiteColor}" />
+    <SolidColorBrush x:Key="BorderBrush"            Color="{StaticResource BorderColor}" />
+    <SolidColorBrush x:Key="InputBackgroundBrush"   Color="{StaticResource InputBackgroundColor}" />
+    <SolidColorBrush x:Key="CardBackgroundBrush"    Color="{StaticResource CardBackgroundColor}" />
+    <SolidColorBrush x:Key="ErrorBrush"             Color="{StaticResource ErrorColor}" />
+    <SolidColorBrush x:Key="TransparentBrush"       Color="Transparent" />
+
+    <!-- ═══════════════════════════════════════════════════
+         GRADIENT BRUSHES
+    ═══════════════════════════════════════════════════ -->
+
+    <!-- Gradient nút "Enter System" (tối) -->
+    <LinearGradientBrush x:Key="DarkButtonGradientBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#1A1A2E" Offset="0"/>
+        <GradientStop Color="#2D2B55" Offset="1"/>
+    </LinearGradientBrush>
+
+    <!-- Gradient nút "Log In" (tím) -->
+    <LinearGradientBrush x:Key="PrimaryButtonGradientBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#7C5CBF" Offset="0"/>
+        <GradientStop Color="#9B7DD4" Offset="1"/>
+    </LinearGradientBrush>
+
+    <!-- ═══════════════════════════════════════════════════
+         STYLE BUTTON CHÍNH (Primary – tím gradient)
+    ═══════════════════════════════════════════════════ -->
+    <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+        <Setter Property="Background"   Value="{StaticResource PrimaryButtonGradientBrush}" />
+        <Setter Property="Foreground"   Value="{StaticResource TextWhiteBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontSize"     Value="15" />
+        <Setter Property="FontWeight"   Value="SemiBold" />
+        <Setter Property="Padding"      Value="24,12" />
+        <Setter Property="Cursor"       Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="8"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <!-- Hiệu ứng hover: sáng hơn -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Opacity" Value="0.88"/>
+                        </Trigger>
+                        <!-- Hiệu ứng bấm: tối hơn -->
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="Opacity" Value="0.75"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════
+         STYLE BUTTON TỐI (Dark – nền đen, chữ trắng)
+         Dùng cho nút "Enter System" trên LandingPage
+    ═══════════════════════════════════════════════════ -->
+    <Style x:Key="DarkButtonStyle" TargetType="Button">
+        <Setter Property="Background"      Value="{StaticResource DarkButtonGradientBrush}" />
+        <Setter Property="Foreground"      Value="{StaticResource TextWhiteBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontSize"        Value="15" />
+        <Setter Property="FontWeight"      Value="SemiBold" />
+        <Setter Property="Padding"         Value="32,14" />
+        <Setter Property="Cursor"          Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="8"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Opacity" Value="0.85"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="Opacity" Value="0.70"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════
+         STYLE BUTTON OUTLINE (viền tím, nền trong suốt)
+         Dùng cho nút "Reader Login" trên LandingPage
+    ═══════════════════════════════════════════════════ -->
+    <Style x:Key="OutlineButtonStyle" TargetType="Button">
+        <Setter Property="Background"      Value="Transparent" />
+        <Setter Property="Foreground"      Value="{StaticResource PrimaryBrush}" />
+        <Setter Property="BorderBrush"     Value="{StaticResource PrimaryBrush}" />
+        <Setter Property="BorderThickness" Value="1.5" />
+        <Setter Property="FontSize"        Value="14" />
+        <Setter Property="FontWeight"      Value="Medium" />
+        <Setter Property="Padding"         Value="20,10" />
+        <Setter Property="Cursor"          Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="8"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="#7C5CBF" Opacity="0.08"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════
+         STYLE BUTTON GHOST (không viền, không nền)
+         Dùng cho nút "Back to Home"
+    ═══════════════════════════════════════════════════ -->
+    <Style x:Key="GhostButtonStyle" TargetType="Button">
+        <Setter Property="Background"      Value="Transparent" />
+        <Setter Property="Foreground"      Value="{StaticResource TextPrimaryBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontSize"        Value="14" />
+        <Setter Property="Padding"         Value="12,8" />
+        <Setter Property="Cursor"          Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="6"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="#F0EDF8"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════
+         STYLE TEXTBOX (ô nhập liệu)
+    ═══════════════════════════════════════════════════ -->
+    <Style x:Key="InputTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Background"      Value="{StaticResource InputBackgroundBrush}" />
+        <Setter Property="Foreground"      Value="{StaticResource TextPrimaryBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontSize"        Value="14" />
+        <Setter Property="Padding"         Value="10,12" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="8"
+                            Padding="{TemplateBinding Padding}">
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                      VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════
+         STYLE PASSWORDBOX (ô nhập mật khẩu)
+    ═══════════════════════════════════════════════════ -->
+    <Style x:Key="InputPasswordBoxStyle" TargetType="PasswordBox">
+        <Setter Property="Background"      Value="{StaticResource InputBackgroundBrush}" />
+        <Setter Property="Foreground"      Value="{StaticResource TextPrimaryBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontSize"        Value="14" />
+        <Setter Property="Padding"         Value="10,12" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="PasswordBox">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="8"
+                            Padding="{TemplateBinding Padding}">
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                      VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
