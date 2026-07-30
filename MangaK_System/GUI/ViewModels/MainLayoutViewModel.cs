@@ -100,9 +100,55 @@ namespace MangaK_System.GUI.ViewModels
 
             // Khởi tạo sidebar với menu items theo role
             Sidebar = new SidebarViewModel(mainViewModel, role);
+            Sidebar.OnNavigationRequested = HandleNavigation;
 
             // Khởi tạo topbar với thông tin người dùng
             TopBar = new TopBarViewModel(mainViewModel, roleName, avatarUrl);
+
+            // Mở trang mặc định ban đầu dựa theo role (bỏ Dashboard)
+            string defaultKey = role == UserRole.Admin ? "accounts" : "series";
+            HandleNavigation(defaultKey, role);
+        }
+
+        /// <summary>
+        /// Xử lý điều hướng hiển thị trang con (sub-page) tương ứng với menu item.
+        /// </summary>
+        private void HandleNavigation(string key, UserRole role)
+        {
+            switch (role)
+            {
+                case UserRole.Mangaka:
+                    CurrentContent = new Mangaka.MangakaSeriesViewModel();
+                    SetPageHeader("Series Management", "Create new manga series and track review status in real-time.");
+                    break;
+
+                case UserRole.Tantou:
+                    CurrentContent = new Tantou.TantouReviewViewModel();
+                    SetPageHeader("Series Review", "Review pending series submitted by your assigned Mangakas.");
+                    break;
+
+                case UserRole.Editorial:
+                    if (key == "schedule")
+                    {
+                        CurrentContent = new Editorial.PublishingScheduleViewModel();
+                        SetPageHeader("Publishing Schedule", "Manage and set publishing release dates and cycles.");
+                    }
+                    else
+                    {
+                        CurrentContent = new Editorial.EditorialApprovalViewModel();
+                        SetPageHeader("Series Approval", "Final approval for series reviewed by Tantou Editors.");
+                    }
+                    break;
+
+                case UserRole.Admin:
+                    CurrentContent = new Admin.AdminAccountsViewModel();
+                    SetPageHeader("Account Management", "Manage user accounts and roles in system.");
+                    break;
+
+                default:
+                    ClearPageHeader();
+                    break;
+            }
         }
 
         // ─── Helper: set tiêu đề trang ───────────────────────

@@ -65,6 +65,8 @@ namespace MangaK_System.BLL.Series
             {
                 SeriesId = s.Id,
                 Title = s.Title,
+                Description = s.Description,
+                NameFile = s.NameFile,
                 Categories = s.CategorySeries.Select(cs => cs.Category.Name).ToList(),
                 CoverFile = s.CoverFile,
                 Status = s.Status,

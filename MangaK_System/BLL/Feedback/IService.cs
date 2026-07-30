@@ -9,5 +9,6 @@ namespace MangaK_System.BLL.Feedback
     public interface IFeedbackService
     {
         Task<List<Mangak_System._1_DAL.Entity.Feedback>> GetFeedbackListAsync(Guid seriesId, Guid userId);
+        Task<Mangak_System._1_DAL.Entity.Feedback> SendFeedbackAsync(Guid seriesId, Guid senderId, string content);
     }
 }

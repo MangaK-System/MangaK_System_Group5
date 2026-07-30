@@ -1,0 +1,102 @@
+<Window
+    x:Class="MangaK_System.GUI.Views.Components.Dialogs.CreateScheduleDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Set Publishing Schedule"
+    Width="460"
+    Height="400"
+    WindowStartupLocation="CenterOwner"
+    ResizeMode="NoResize"
+    Background="#F8F7FC">
+
+    <!--
+    Dialog Đặt Lịch Xuất Bản cho Editorial Board
+    -->
+    <Border Padding="28">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                <TextBlock x:Name="SeriesTitleTextBlock"
+                           Text="Set Publishing Schedule"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           Foreground="#1A1A2E"/>
+                <TextBlock Text="Specify the publishing date and cycle period for this approved series."
+                           FontSize="12"
+                           Foreground="#6B7280"
+                           Margin="0,4,0,0"/>
+            </StackPanel>
+
+            <!-- Form -->
+            <StackPanel Grid.Row="1">
+                <!-- Publish Period -->
+                <TextBlock Text="PUBLISHING PERIOD"
+                           FontSize="11"
+                           FontWeight="SemiBold"
+                           Foreground="#374151"
+                           Margin="0,0,0,6"/>
+                <ComboBox x:Name="PeriodComboBox"
+                          Height="40"
+                          FontSize="14"
+                          Padding="10,8"
+                          Background="White"
+                          SelectedIndex="0"
+                          Margin="0,0,0,16">
+                    <ComboBoxItem Content="Weekly"/>
+                    <ComboBoxItem Content="Monthly"/>
+                </ComboBox>
+
+                <!-- Publish Date -->
+                <TextBlock Text="PUBLISH DATE"
+                           FontSize="11"
+                           FontWeight="SemiBold"
+                           Foreground="#374151"
+                           Margin="0,0,0,6"/>
+                <DatePicker x:Name="PublishDatePicker"
+                            Height="40"
+                            FontSize="14"
+                            Padding="8"
+                            Background="White"
+                            BorderBrush="#E5E7EB"
+                            BorderThickness="1"/>
+
+                <TextBlock x:Name="ErrorMessageTextBlock"
+                           Foreground="#EF4444"
+                           FontSize="12"
+                           Margin="0,10,0,0"
+                           Visibility="Collapsed"/>
+            </StackPanel>
+
+            <!-- Action Buttons -->
+            <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Margin="0,20,0,0">
+                <Button Content="Cancel"
+                        Width="90" Height="38"
+                        Margin="0,0,10,0"
+                        Background="#E5E7EB"
+                        Foreground="#374151"
+                        FontWeight="SemiBold"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="CancelButton_Click"/>
+
+                <Button Content="Set Schedule"
+                        Width="130" Height="38"
+                        Background="#9333EA"
+                        Foreground="White"
+                        FontWeight="SemiBold"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="SubmitButton_Click"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>
