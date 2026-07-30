@@ -57,5 +57,35 @@ namespace MangaK_System.BLL.Feedback
 
             return feedbacks;
         }
+
+        public async Task<Mangak_System._1_DAL.Entity.Feedback> SendFeedbackAsync(Guid seriesId, Guid senderId, string content)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+                throw new ArgumentException("Feedback content cannot be empty.");
+
+            var user = await _context.Users.FindAsync(senderId);
+            if (user == null)
+                throw new UnauthorizedAccessException("User not found.");
+
+            var series = await _context.Series.FindAsync(seriesId);
+            if (series == null)
+                throw new KeyNotFoundException("Series not found.");
+
+            var feedback = new Mangak_System._1_DAL.Entity.Feedback
+            {
+                Id = Guid.NewGuid(),
+                SeriesId = seriesId,
+                SenderId = senderId,
+                Content = content,
+                Type = FeedbackType.Manual,
+                CreatedAt = DateTimeOffset.UtcNow,
+                IsRead = false
+            };
+
+            _context.Feedbacks.Add(feedback);
+            await _context.SaveChangesAsync();
+
+            return feedback;
+        }
     }
 }

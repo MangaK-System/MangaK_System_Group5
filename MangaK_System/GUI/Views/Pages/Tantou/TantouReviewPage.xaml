@@ -1,0 +1,165 @@
+<UserControl
+    x:Class="MangaK_System.GUI.Views.Pages.Tantou.TantouReviewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Background="Transparent">
+
+    <!--
+    Màn hình Duyệt Series dành cho Tantou Editor
+    -->
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <TextBlock Text="Series Pending Tantou Review"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       Foreground="#1A1A2E"/>
+        </Grid>
+
+        <!-- List -->
+        <Grid Grid.Row="1">
+            <TextBlock Text="Loading pending series..."
+                       Foreground="#6B7280"
+                       FontSize="14"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsLoading}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <TextBlock Text="{Binding StatusMessage}"
+                       Foreground="#6B7280"
+                       FontSize="14"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding StatusMessage}" Value="">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <ListView ItemsSource="{Binding SeriesList}"
+                      Background="Transparent"
+                      BorderThickness="0"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Margin" Value="0,0,0,12"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="White"
+                                CornerRadius="12"
+                                Padding="16"
+                                BorderBrush="#E5E7EB"
+                                BorderThickness="1">
+                            <Border.Effect>
+                                <DropShadowEffect Color="#000000" Opacity="0.04" BlurRadius="6" ShadowDepth="2" Direction="270"/>
+                            </Border.Effect>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Cover Image -->
+                                <Border Grid.Column="0"
+                                        Width="60" Height="80"
+                                        CornerRadius="6"
+                                        Background="#FEF3C7"
+                                        Margin="0,0,16,0"
+                                        ClipToBounds="True">
+                                    <Grid>
+                                        <Image Source="{Binding CoverFile}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Series Details -->
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Title}"
+                                               FontSize="16"
+                                               FontWeight="Bold"
+                                               Foreground="#1A1A2E"/>
+                                    <TextBlock Text="{Binding MangakaName, StringFormat='Author: {0}'}"
+                                               FontSize="13"
+                                               Foreground="#4B5563"
+                                               Margin="0,2,0,0"/>
+                                    <TextBlock Text="{Binding CreateAt, StringFormat='Submitted: {0:dd/MM/yyyy HH:mm}'}"
+                                               FontSize="12"
+                                               Foreground="#9CA3AF"
+                                               Margin="0,4,0,0"/>
+                                </StackPanel>
+
+                                <!-- Buttons -->
+                                <StackPanel Grid.Column="2"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+                                    <Button Content="View Details"
+                                            Command="{Binding DataContext.ViewDetailsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            Background="#E0E7FF"
+                                            Foreground="#4338CA"
+                                            FontWeight="SemiBold"
+                                            Padding="12,8"
+                                            Margin="0,0,10,0"
+                                            BorderThickness="0"
+                                            Cursor="Hand">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+
+                                    <Button Content="Review Series"
+                                            Command="{Binding DataContext.ReviewSeriesCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            Background="#7C5CBF"
+                                            Foreground="White"
+                                            FontWeight="SemiBold"
+                                            Padding="16,8"
+                                            BorderThickness="0"
+                                            Cursor="Hand">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </Grid>
+</UserControl>

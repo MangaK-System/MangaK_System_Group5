@@ -119,6 +119,11 @@ namespace MangaK_System.GUI.ViewModels
         // ─── Constructor ──────────────────────────────────────
 
         /// <summary>
+        /// Callback được gọi khi người dùng click vào mục menu để chuyển nội dung trang.
+        /// </summary>
+        public Action<string, UserRole>? OnNavigationRequested { get; set; }
+
+        /// <summary>
         /// Khởi tạo SidebarViewModel với role người dùng.
         /// </summary>
         /// <param name="mainViewModel">Router trung tâm để điều hướng</param>
@@ -143,7 +148,7 @@ namespace MangaK_System.GUI.ViewModels
                 if (param is MenuItem item)
                 {
                     SelectedItem = item;
-                    NavigateTo(item.Key, role);
+                    OnNavigationRequested?.Invoke(item.Key, role);
                 }
             });
 
@@ -164,37 +169,29 @@ namespace MangaK_System.GUI.ViewModels
 
             var items = role switch
             {
-                // admin: Dashboard + Account Management
+                // admin: Account Management
                 UserRole.Admin => new[]
                 {
-                    new MenuItem { Key = "dashboard",  Label = "Dashboard",           IconGlyph = "🏠" },
-                    new MenuItem { Key = "accounts",   Label = "Account Management",  IconGlyph = "👥" },
+                    new MenuItem { Key = "accounts", Label = "Account Management", IconGlyph = "👥" },
                 },
 
-                // mangaka: Dashboard + Series + Tasks + Leaderboard
+                // mangaka: Series Management
                 UserRole.Mangaka => new[]
                 {
-                    new MenuItem { Key = "dashboard",   Label = "Dashboard",          IconGlyph = "🏠" },
-                    new MenuItem { Key = "series",      Label = "Series Management",  IconGlyph = "📂" },
-                    new MenuItem { Key = "tasks",       Label = "Task Management",    IconGlyph = "📋" },
-                    new MenuItem { Key = "leaderboard", Label = "Leaderboard",        IconGlyph = "📈" },
+                    new MenuItem { Key = "series", Label = "Series Management", IconGlyph = "📂" },
                 },
 
-                // tantou: Dashboard + Series Review + Leaderboard
+                // tantou: Series Review
                 UserRole.Tantou => new[]
                 {
-                    new MenuItem { Key = "dashboard",   Label = "Dashboard",    IconGlyph = "🏠" },
-                    new MenuItem { Key = "series",      Label = "Series Review", IconGlyph = "📂" },
-                    new MenuItem { Key = "leaderboard", Label = "Leaderboard",  IconGlyph = "📈" },
+                    new MenuItem { Key = "series", Label = "Series Review", IconGlyph = "📂" },
                 },
 
-                // editorial: Dashboard + Series Approval + Schedule + Leaderboard
+                // editorial: Series Approval + Publishing Schedule
                 UserRole.Editorial => new[]
                 {
-                    new MenuItem { Key = "dashboard",   Label = "Dashboard",          IconGlyph = "🏠" },
-                    new MenuItem { Key = "series",      Label = "Series Approval",    IconGlyph = "🔍" },
-                    new MenuItem { Key = "schedule",    Label = "Publishing Schedule", IconGlyph = "📅" },
-                    new MenuItem { Key = "leaderboard", Label = "Leaderboard",        IconGlyph = "📈" },
+                    new MenuItem { Key = "series",   Label = "Series Approval",    IconGlyph = "🔍" },
+                    new MenuItem { Key = "schedule", Label = "Publishing Schedule", IconGlyph = "📅" },
                 },
 
                 _ => Array.Empty<MenuItem>()

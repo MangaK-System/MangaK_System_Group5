@@ -34,6 +34,9 @@ namespace MangaK_System
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
+            // Đăng ký IConfiguration vào DI container
+            services.AddSingleton<IConfiguration>(configuration);
+
             // =============================
             // Database
             // =============================

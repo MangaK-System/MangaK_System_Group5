@@ -1,0 +1,125 @@
+<UserControl
+    x:Class="MangaK_System.GUI.Views.Pages.Admin.AdminAccountsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Background="Transparent">
+
+    <!--
+    Màn hình Quản lý Tài khoản & Phân công Tantou Editor (Supervisor) cho Admin
+    -->
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <TextBlock Text="Account &amp; Supervisor Management"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       Foreground="#1A1A2E"/>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <DataGrid ItemsSource="{Binding UserList}"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      Background="White"
+                      BorderBrush="#E5E7EB"
+                      BorderThickness="1"
+                      RowHeaderWidth="0"
+                      RowHeight="44"
+                      GridLinesVisibility="Horizontal"
+                      HorizontalGridLinesBrush="#F3F4F6">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="1.5*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Role" Binding="{Binding Role}" Width="100" IsReadOnly="True"/>
+
+                    <!-- Assigned Supervisor Column -->
+                    <DataGridTextColumn Header="Current Supervisor" Binding="{Binding SupervisorName}" Width="140" IsReadOnly="True"/>
+
+                    <!-- Assign Tantou Editor Column (for Mangakas) -->
+                    <DataGridTemplateColumn Header="Assign Tantou Editor" Width="220">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Margin="4,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- ComboBox select Tantou Editor -->
+                                    <ComboBox Grid.Column="0"
+                                              ItemsSource="{Binding DataContext.TantouEditors, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              SelectedValue="{Binding SelectedSupervisorId, Mode=TwoWay}"
+                                              SelectedValuePath="Id"
+                                              Height="30"
+                                              FontSize="12"
+                                              VerticalAlignment="Center">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock FontSize="12">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}{0} {1}">
+                                                            <Binding Path="FirstName"/>
+                                                            <Binding Path="LastName"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                        <ComboBox.Style>
+                                            <Style TargetType="ComboBox">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsMangaka}" Value="False">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ComboBox.Style>
+                                    </ComboBox>
+
+                                    <!-- Save Button -->
+                                    <Button Grid.Column="1"
+                                            Content="Save"
+                                            Command="{Binding DataContext.AssignSupervisorCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            Background="#7C5CBF"
+                                            Foreground="White"
+                                            FontWeight="SemiBold"
+                                            Padding="10,4"
+                                            Margin="6,0,0,0"
+                                            Height="30"
+                                            VerticalAlignment="Center"
+                                            BorderThickness="0"
+                                            Cursor="Hand">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsMangaka}" Value="False">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="90" IsReadOnly="True"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</UserControl>

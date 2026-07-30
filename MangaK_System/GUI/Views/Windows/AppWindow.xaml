@@ -4,6 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:pages="clr-namespace:MangaK_System.GUI.Views.Pages"
     xmlns:vm="clr-namespace:MangaK_System.GUI.ViewModels"
+    xmlns:mangakaVm="clr-namespace:MangaK_System.GUI.ViewModels.Mangaka"
+    xmlns:mangakaPage="clr-namespace:MangaK_System.GUI.Views.Pages.Mangaka"
+    xmlns:tantouVm="clr-namespace:MangaK_System.GUI.ViewModels.Tantou"
+    xmlns:tantouPage="clr-namespace:MangaK_System.GUI.Views.Pages.Tantou"
+    xmlns:editorialVm="clr-namespace:MangaK_System.GUI.ViewModels.Editorial"
+    xmlns:editorialPage="clr-namespace:MangaK_System.GUI.Views.Pages.Editorial"
+    xmlns:adminVm="clr-namespace:MangaK_System.GUI.ViewModels.Admin"
+    xmlns:adminPage="clr-namespace:MangaK_System.GUI.Views.Pages.Admin"
     Title="MangaK Management System"
     Width="1200"
     Height="700"
@@ -59,6 +67,31 @@
             <!-- Route: MainLayoutViewModel → MainLayout (shell sau đăng nhập) -->
             <DataTemplate DataType="{x:Type vm:MainLayoutViewModel}">
                 <pages:MainLayout/>
+            </DataTemplate>
+
+            <!-- Route: MangakaSeriesViewModel → MangakaSeriesPage -->
+            <DataTemplate DataType="{x:Type mangakaVm:MangakaSeriesViewModel}">
+                <mangakaPage:MangakaSeriesPage/>
+            </DataTemplate>
+
+            <!-- Route: TantouReviewViewModel → TantouReviewPage -->
+            <DataTemplate DataType="{x:Type tantouVm:TantouReviewViewModel}">
+                <tantouPage:TantouReviewPage/>
+            </DataTemplate>
+
+            <!-- Route: EditorialApprovalViewModel → EditorialApprovalPage -->
+            <DataTemplate DataType="{x:Type editorialVm:EditorialApprovalViewModel}">
+                <editorialPage:EditorialApprovalPage/>
+            </DataTemplate>
+
+            <!-- Route: PublishingScheduleViewModel → PublishingSchedulePage -->
+            <DataTemplate DataType="{x:Type editorialVm:PublishingScheduleViewModel}">
+                <editorialPage:PublishingSchedulePage/>
+            </DataTemplate>
+
+            <!-- Route: AdminAccountsViewModel → AdminAccountsPage -->
+            <DataTemplate DataType="{x:Type adminVm:AdminAccountsViewModel}">
+                <adminPage:AdminAccountsPage/>
             </DataTemplate>
 
             <!--
