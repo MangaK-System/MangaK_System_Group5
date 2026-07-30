@@ -244,6 +244,78 @@ public class AppDbContext : DbContext
                 CreatedAt = now
             }            
         );
+        modelBuilder.Entity<Category>().HasData(
+                     new Category
+            {
+                Id = Guid.Parse("f0000000-0000-0000-0000-000000000001"),
+                Name = "Action"
+            },
+            new Category
+            {
+                Id = Guid.Parse("f0000000-0000-0000-0000-000000000002"),
+                Name = "Adventure"
+            },
+            new Category
+            {
+                Id = Guid.Parse("f0000000-0000-0000-0000-000000000003"),
+                Name = "Fantasy"
+            },
+            new Category
+            {
+                Id = Guid.Parse("f0000000-0000-0000-0000-000000000004"),
+                Name = "Romance"
+            },
+            new Category
+            {
+                Id = Guid.Parse("f0000000-0000-0000-0000-000000000005"),
+                Name = "Comedy"
+            },
+            new Category
+            {
+                Id = Guid.Parse("f0000000-0000-0000-0000-000000000006"),
+                Name = "Drama"
+            },
+            new Category
+            {
+                Id = Guid.Parse("f0000000-0000-0000-0000-000000000007"),
+                Name = "Horror"
+            },
+            new Category
+            {
+                Id = Guid.Parse("f0000000-0000-0000-0000-000000000008"),
+                Name = "Mystery"
+            },
+            new Category
+            {
+                Id = Guid.Parse("f0000000-0000-0000-0000-000000000009"),
+                Name = "School Life"
+            },
+            new Category
+            {
+                Id = Guid.Parse("f0000000-0000-0000-0000-000000000010"),
+                Name = "Slice of Life"
+            },
+            new Category
+            {
+                Id = Guid.Parse("f0000000-0000-0000-0000-000000000011"),
+                Name = "Sports"
+            },
+            new Category
+            {
+                Id = Guid.Parse("f0000000-0000-0000-0000-000000000012"),
+                Name = "Sci-Fi"
+            },
+            new Category
+            {
+                Id = Guid.Parse("f0000000-0000-0000-0000-000000000013"),
+                Name = "Supernatural"
+            },
+            new Category
+            {
+                Id = Guid.Parse("f0000000-0000-0000-0000-000000000014"),
+                Name = "Historical"
+            }
+            );
     }
 }
 
