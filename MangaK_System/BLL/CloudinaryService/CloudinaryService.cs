@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,7 +11,6 @@ using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using MangaK_System.BLL.MediaService;
 using Microsoft.Extensions.Configuration;
-using Npgsql.BackendMessages;
 
 namespace MangaK_System.BLL.CloudinaryService;
 

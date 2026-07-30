@@ -153,10 +153,11 @@ namespace MangaK_System.GUI.ViewModels
                 // TODO: _mainViewModel.NavigateToProfile();
             });
 
-            // Đăng xuất → quay về Landing
+            // Đăng xuất → giải phóng session và quay về Landing
             LogoutCommand = new RelayCommand(_ =>
             {
                 IsMenuDropdownOpen = false;
+                MangaK_System.GUI.Services.UserSession.Logout();
                 _mainViewModel.NavigateToLanding();
             });
         }

@@ -1,14 +1,22 @@
+using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Microsoft.Extensions.DependencyInjection;
+using MangaK_System.BLL.User;
+using MangaK_System.GUI.Services;
+using DalUserRole = MangaK_System.DAL.Entity.Enums.UserRole;
+using GuiUserRole = MangaK_System.GUI.ViewModels.UserRole;
 
 namespace MangaK_System.GUI.ViewModels
 {
     /// <summary>
     /// ViewModel cho trang Đăng nhập (LoginPage).
-    /// Quản lý trạng thái form đăng nhập: email, mật khẩu, hiển thị lỗi.
+    /// Quản lý trạng thái form đăng nhập: email, mật khẩu, hiển thị lỗi,
+    /// và kết nối trực tiếp với IUserService trong tầng BLL để xác thực người dùng.
     /// </summary>
     public class LoginViewModel : BaseViewModel
     {
-        // Tham chiếu tới MainViewModel để điều hướng quay lại trang chủ
+        // Tham chiếu tới MainViewModel để điều hướng trang
         private readonly MainViewModel _mainViewModel;
 
         // ─── Backing fields ────────────────────────────────────────────────
@@ -31,8 +39,6 @@ namespace MangaK_System.GUI.ViewModels
 
         /// <summary>
         /// Mật khẩu người dùng nhập vào.
-        /// Lưu ý: trong WPF, PasswordBox không hỗ trợ binding trực tiếp,
-        /// nên cần xử lý qua code-behind hoặc Attached Property.
         /// </summary>
         public string Password
         {
@@ -42,7 +48,6 @@ namespace MangaK_System.GUI.ViewModels
 
         /// <summary>
         /// Trạng thái hiển thị mật khẩu (true = hiện, false = ẩn).
-        /// Điều khiển việc dùng TextBox hay PasswordBox trong View.
         /// </summary>
         public bool IsPasswordVisible
         {
@@ -52,7 +57,6 @@ namespace MangaK_System.GUI.ViewModels
 
         /// <summary>
         /// Thông báo lỗi hiển thị bên dưới form khi đăng nhập thất bại.
-        /// Rỗng = không có lỗi.
         /// </summary>
         public string ErrorMessage
         {
@@ -61,13 +65,19 @@ namespace MangaK_System.GUI.ViewModels
         }
 
         /// <summary>
-        /// Trạng thái đang xử lý đăng nhập (true = đang gọi API/Service).
-        /// Dùng để vô hiệu hoá nút Log In và hiển thị loading indicator.
+        /// Trạng thái đang xử lý đăng nhập (true = đang gọi Service).
         /// </summary>
         public bool IsLoading
         {
             get => _isLoading;
-            set => SetProperty(ref _isLoading, value);
+            set
+            {
+                if (SetProperty(ref _isLoading, value))
+                {
+                    // Thông báo RequerySuggested để tự động refresh trạng thái CanExecute của LoginCommand
+                    CommandManager.InvalidateRequerySuggested();
+                }
+            }
         }
 
         // ─── Commands ─────────────────────────────────────────────────────
@@ -90,9 +100,7 @@ namespace MangaK_System.GUI.ViewModels
         /// <summary>
         /// Khởi tạo LoginViewModel.
         /// </summary>
-        /// <param name="mainViewModel">
-        /// MainViewModel – dùng để điều hướng quay lại trang chủ
-        /// </param>
+        /// <param name="mainViewModel">MainViewModel – dùng để điều hướng</param>
         public LoginViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
@@ -103,25 +111,24 @@ namespace MangaK_System.GUI.ViewModels
             // Bật/tắt hiển thị mật khẩu
             TogglePasswordVisibilityCommand = new RelayCommand(_ => IsPasswordVisible = !IsPasswordVisible);
 
-            // Thực hiện đăng nhập
+            // Thực hiện đăng nhập bất đồng bộ
             LoginCommand = new RelayCommand(
-                _ => ExecuteLogin(),
-                _ => !IsLoading // Chỉ cho phép bấm khi không đang loading
+                async _ => await ExecuteLoginAsync(),
+                _ => !IsLoading // Vô hiệu hoá nút khi đang xử lý
             );
         }
 
-        // ─── Logic xử lý ──────────────────────────────────────────────────
+        // ─── Logic xử lý kết nối BLL & DAL ───────────────────────────────
 
         /// <summary>
-        /// Xử lý đăng nhập khi người dùng bấm nút "Log In".
-        /// TODO: Kết nối với BLL/Service thực tế để xác thực người dùng.
+        /// Thực hiện xác thực đăng nhập qua IUserService (BLL).
         /// </summary>
-        private void ExecuteLogin()
+        private async Task ExecuteLoginAsync()
         {
-            // Xoá lỗi cũ
+            // Reset thông báo lỗi cũ
             ErrorMessage = string.Empty;
 
-            // Validate đơn giản trước khi gọi service
+            // 1. Kiểm tra dữ liệu đầu vào (Validation)
             if (string.IsNullOrWhiteSpace(Email))
             {
                 ErrorMessage = "Vui lòng nhập địa chỉ email.";
@@ -134,15 +141,108 @@ namespace MangaK_System.GUI.ViewModels
                 return;
             }
 
-            // TODO: Gọi AuthService để xác thực
-            // Ví dụ:
-            // IsLoading = true;
-            // var result = await _authService.LoginAsync(Email, Password);
-            // if (result.IsSuccess)
-            //     _mainViewModel.CurrentPage = new DashboardViewModel(_mainViewModel);
-            // else
-            //     ErrorMessage = result.Message;
-            // IsLoading = false;
+            IsLoading = true;
+
+            try
+            {
+                // 2. Lấy IUserService từ DI ServiceProvider của App
+                using var scope = App.ServiceProvider.CreateScope();
+                var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+
+                // 3. Gọi LoginAsync trong BLL (BLL sẽ truy vấn DAL AppDbContext và verify password hash bằng BCrypt)
+                var user = await userService.LoginAsync(Email.Trim(), Password);
+
+                if (user == null)
+                {
+                    ErrorMessage = "Email hoặc mật khẩu không chính xác.";
+                    return;
+                }
+
+                // 4. Ánh xạ Role từ DAL sang GUI và kiểm tra quyền truy cập Desktop App
+                if (!TryMapRole(user.Role, out GuiUserRole guiRole, out string roleDisplayName))
+                {
+                    ErrorMessage = "Tài khoản của bạn không có quyền truy cập ứng dụng Desktop.";
+                    return;
+                }
+
+                // 5. Lưu thông tin người dùng vào Session
+                UserSession.Login(user);
+
+                // 6. Xây dựng tên hiển thị (Ưu tiên AuthorName -> "FirstName LastName" -> Email)
+                string displayName = !string.IsNullOrWhiteSpace(user.AuthorName)
+                    ? user.AuthorName
+                    : $"{user.FirstName} {user.LastName}".Trim();
+
+                if (string.IsNullOrWhiteSpace(displayName))
+                {
+                    displayName = user.Email;
+                }
+
+                // 7. Chuyển sang Giao diện chính (MainLayout) theo Role tương ứng
+                _mainViewModel.NavigateToMainLayout(guiRole, roleDisplayName, user.AvatarUrl ?? string.Empty);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                // BLL ném UnauthorizedAccessException khi Email không tồn tại hoặc sai mật khẩu
+                if (ex.Message.Contains("Email not found", StringComparison.OrdinalIgnoreCase))
+                {
+                    ErrorMessage = "Email không tồn tại trong hệ thống.";
+                }
+                else if (ex.Message.Contains("Incorrect password", StringComparison.OrdinalIgnoreCase))
+                {
+                    ErrorMessage = "Mật khẩu không chính xác.";
+                }
+                else
+                {
+                    ErrorMessage = ex.Message;
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                ErrorMessage = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Đã xảy ra lỗi hệ thống: {ex.Message}";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        /// <summary>
+        /// Ánh xạ UserRole từ tầng DAL sang GuiUserRole ở tầng GUI.
+        /// </summary>
+        private static bool TryMapRole(DalUserRole dalRole, out GuiUserRole guiRole, out string roleDisplayName)
+        {
+            switch (dalRole)
+            {
+                case DalUserRole.Mangaka:
+                    guiRole = GuiUserRole.Mangaka;
+                    roleDisplayName = "Mangaka";
+                    return true;
+
+                case DalUserRole.Tantou:
+                    guiRole = GuiUserRole.Tantou;
+                    roleDisplayName = "Tantou Editor";
+                    return true;
+
+                case DalUserRole.Editorial:
+                    guiRole = GuiUserRole.Editorial;
+                    roleDisplayName = "Editorial Board";
+                    return true;
+
+                case DalUserRole.Admin:
+                    guiRole = GuiUserRole.Admin;
+                    roleDisplayName = "Admin";
+                    return true;
+
+                default:
+                    guiRole = default;
+                    roleDisplayName = string.Empty;
+                    return false;
+            }
         }
     }
 }
