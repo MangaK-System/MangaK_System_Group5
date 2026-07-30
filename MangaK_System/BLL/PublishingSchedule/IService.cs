@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System;
 using System.Threading.Tasks;
 
 namespace MangaK_System.BLL.PublishingSchedule
 {
-    class IService
+    public interface IPublishingScheduleService
     {
+        Task<bool> CreatePublishingScheduleAsync(Guid seriesId, DateTime publishDate, string publishPeriod, Guid decidedById);
+        Task<System.Collections.Generic.List<GetPublishingScheduleResponse>> GetAllPublishingSchedulesAsync(Guid userId);
     }
 }
