@@ -1,0 +1,133 @@
+<UserControl
+    x:Class="MangaK_System.GUI.Views.Pages.MainLayout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:components="clr-namespace:MangaK_System.GUI.Views.Components"
+    xmlns:vm="clr-namespace:MangaK_System.GUI.ViewModels"
+    Background="#F8F7FC">
+
+    <!--
+    ╔══════════════════════════════════════════════════════════╗
+    ║         PAGE: MainLayout (Shell sau đăng nhập)          ║
+    ╚══════════════════════════════════════════════════════════╝
+    Tương đương Layout.jsx – là shell bọc ngoài toàn bộ UI sau login.
+
+    Bố cục:
+    ┌────────────────────────────────────────────────────────┐
+    │ [SidebarControl] │ [TopBarControl (Header)]            │
+    │                  │─────────────────────────────────────│
+    │                  │ [Page Header (Title + Subtitle)]    │
+    │                  │─────────────────────────────────────│
+    │                  │ [ContentControl → render CurrentPage]│
+    └────────────────────────────────────────────────────────┘
+
+    DataContext: MainLayoutViewModel
+    -->
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <!-- Cột Sidebar – chiều rộng động (bind SidebarWidth) -->
+            <ColumnDefinition Width="Auto"/>
+            <!-- Cột nội dung chính -->
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ═══════════════════════════════════════════════
+             CỘT TRÁI: Sidebar
+             DataContext chuyển sang Sidebar sub-VM
+        ═══════════════════════════════════════════════ -->
+        <components:SidebarControl
+            Grid.Column="0"
+            DataContext="{Binding Sidebar}"/>
+
+        <!-- ═══════════════════════════════════════════════
+             CỘT PHẢI: TopBar + Content
+        ═══════════════════════════════════════════════ -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <!-- TopBar cố định -->
+                <RowDefinition Height="Auto"/>
+                <!-- Page Header (tuỳ chọn) -->
+                <RowDefinition Height="Auto"/>
+                <!-- Vùng nội dung chính (cuộn được) -->
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- ─── TopBar ─── -->
+            <!--
+            DataContext chuyển sang TopBar sub-VM.
+            Tương đương <HeaderPage> trong Layout.jsx.
+            -->
+            <components:TopBarControl
+                Grid.Row="0"
+                DataContext="{Binding TopBar}"/>
+
+            <!-- ─── Page Header (Title + Subtitle) ─── -->
+            <!--
+            Chỉ hiện khi PageTitle không rỗng.
+            Tương đương {pageHeader && <div>...} trong Layout.jsx.
+            -->
+            <Border Grid.Row="1"
+                    Background="White"
+                    Margin="16,12,16,0"
+                    CornerRadius="12"
+                    Padding="20,14"
+                    BorderBrush="#E5E7EB"
+                    BorderThickness="1">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding HasPageHeader}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Border.Effect>
+                    <DropShadowEffect Color="#000000"
+                                      Opacity="0.04"
+                                      BlurRadius="8"
+                                      ShadowDepth="2"
+                                      Direction="270"/>
+                </Border.Effect>
+
+                <StackPanel>
+                    <!-- Tiêu đề trang -->
+                    <TextBlock Text="{Binding PageTitle}"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Foreground="#1A1A2E"/>
+                    <!-- Mô tả ngắn -->
+                    <TextBlock Text="{Binding PageSubtitle}"
+                               FontSize="12"
+                               Foreground="#6B7280"
+                               Margin="0,3,0,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <Trigger Property="Text" Value="">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+
+            <!-- ─── Vùng nội dung chính ─── -->
+            <!--
+            ContentControl tự tìm DataTemplate phù hợp với CurrentContent.
+            Tương đương <Outlet> trong Layout.jsx.
+            Cần đăng ký DataTemplate cho từng sub-page ViewModel trong AppWindow.xaml.
+            -->
+            <ScrollViewer Grid.Row="2"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled"
+                          Padding="16,12">
+                <ContentControl Content="{Binding CurrentContent}"/>
+            </ScrollViewer>
+
+        </Grid>
+    </Grid>
+</UserControl>

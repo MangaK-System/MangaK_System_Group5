@@ -1,12 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+
+using Mangak_System._1_DAL.Entity;
 
 namespace MangaK_System.BLL.Feedback
 {
-    class IService
+    public interface IFeedbackService
     {
+        Task<List<Mangak_System._1_DAL.Entity.Feedback>> GetFeedbackListAsync(Guid seriesId, Guid userId);
+        Task<Mangak_System._1_DAL.Entity.Feedback> SendFeedbackAsync(Guid seriesId, Guid senderId, string content);
     }
 }

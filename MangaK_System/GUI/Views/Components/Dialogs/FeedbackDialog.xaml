@@ -1,0 +1,115 @@
+<Window
+    x:Class="MangaK_System.GUI.Views.Components.Dialogs.FeedbackDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Series Feedback History"
+    Width="560"
+    Height="480"
+    WindowStartupLocation="CenterOwner"
+    ResizeMode="NoResize"
+    Background="#F8F7FC">
+
+    <!--
+    Dialog xem lịch sử Feedback của Series (Read-Only)
+    -->
+    <Border Padding="24">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,16">
+                <TextBlock x:Name="SeriesTitleTextBlock"
+                           Text="Feedback History"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           Foreground="#1A1A2E"/>
+                <TextBlock Text="Automated system notifications and review notes generated during review process."
+                           FontSize="12"
+                           Foreground="#6B7280"
+                           Margin="0,4,0,0"/>
+            </StackPanel>
+
+            <!-- Feedback History List -->
+            <Grid Grid.Row="1" Margin="0,0,0,16">
+                <!-- Status/Empty message -->
+                <TextBlock x:Name="StatusTextBlock"
+                           Text="Loading feedback history..."
+                           FontSize="13"
+                           Foreground="#6B7280"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+
+                <!-- ListView of Feedbacks -->
+                <ListView x:Name="FeedbackListView"
+                          Background="Transparent"
+                          BorderThickness="0"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Margin" Value="0,0,0,10"/>
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="White"
+                                    CornerRadius="10"
+                                    Padding="14"
+                                    BorderBrush="#E5E7EB"
+                                    BorderThickness="1">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Sender & Time -->
+                                    <Grid Grid.Row="0" Margin="0,0,0,6">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                            <TextBlock Text="{Binding Sender.FirstName}" FontWeight="Bold" FontSize="13" Foreground="#1A1A2E" Margin="0,0,4,0"/>
+                                            <TextBlock Text="{Binding Sender.LastName}" FontWeight="Bold" FontSize="13" Foreground="#1A1A2E"/>
+                                            <TextBlock Text="{Binding Sender.Role, StringFormat='{} ({0})'}" FontSize="11" Foreground="#7C5CBF" VerticalAlignment="Center"/>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding CreatedAt, StringFormat='{}{0:dd/MM/yyyy HH:mm}'}"
+                                                   FontSize="11"
+                                                   Foreground="#9CA3AF"
+                                                   HorizontalAlignment="Right"/>
+                                    </Grid>
+
+                                    <!-- Feedback Content -->
+                                    <TextBlock Grid.Row="1"
+                                               Text="{Binding Content}"
+                                               FontSize="13"
+                                               Foreground="#374151"
+                                               TextWrapping="Wrap"
+                                               LineHeight="18"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+
+            <!-- Close Button -->
+            <Button Grid.Row="2"
+                    Content="Close"
+                    Width="90" Height="36"
+                    HorizontalAlignment="Right"
+                    Background="#E5E7EB"
+                    Foreground="#374151"
+                    FontWeight="SemiBold"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    Click="CloseButton_Click"/>
+        </Grid>
+    </Border>
+</Window>

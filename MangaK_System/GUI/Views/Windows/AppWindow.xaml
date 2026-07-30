@@ -1,0 +1,124 @@
+<Window
+    x:Class="MangaK_System.GUI.Views.Windows.AppWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:pages="clr-namespace:MangaK_System.GUI.Views.Pages"
+    xmlns:vm="clr-namespace:MangaK_System.GUI.ViewModels"
+    xmlns:mangakaVm="clr-namespace:MangaK_System.GUI.ViewModels.Mangaka"
+    xmlns:mangakaPage="clr-namespace:MangaK_System.GUI.Views.Pages.Mangaka"
+    xmlns:tantouVm="clr-namespace:MangaK_System.GUI.ViewModels.Tantou"
+    xmlns:tantouPage="clr-namespace:MangaK_System.GUI.Views.Pages.Tantou"
+    xmlns:editorialVm="clr-namespace:MangaK_System.GUI.ViewModels.Editorial"
+    xmlns:editorialPage="clr-namespace:MangaK_System.GUI.Views.Pages.Editorial"
+    xmlns:adminVm="clr-namespace:MangaK_System.GUI.ViewModels.Admin"
+    xmlns:adminPage="clr-namespace:MangaK_System.GUI.Views.Pages.Admin"
+    xmlns:sharedVm="clr-namespace:MangaK_System.GUI.ViewModels.Shared"
+    xmlns:sharedPage="clr-namespace:MangaK_System.GUI.Views.Pages.Shared"
+    Title="MangaK Management System"
+    Width="1200"
+    Height="700"
+    MinWidth="900"
+    MinHeight="600"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="SingleBorderWindow">
+
+    <!--
+    ╔══════════════════════════════════════════════════════════════╗
+    ║              AppWindow – Cửa sổ chính của ứng dụng         ║
+    ╚══════════════════════════════════════════════════════════════╝
+    Đây là "shell" của ứng dụng – tương tự App.tsx trong React.
+    
+    Cơ chế điều hướng:
+    ──────────────────
+    1. DataContext = MainViewModel (gán trong code-behind).
+    2. MainViewModel.CurrentPage là một BaseViewModel (LandingViewModel, LoginViewModel, ...).
+    3. ContentControl bind vào CurrentPage.
+    4. WPF tự tìm DataTemplate trong Window.Resources theo kiểu của CurrentPage,
+       rồi render View tương ứng → giống React Router.
+    
+    Để thêm trang mới:
+      1. Tạo XxxViewModel và XxxPage
+      2. Thêm DataTemplate ở đây: <DataTemplate DataType="{x:Type vm:XxxViewModel}">
+      3. Thêm phương thức NavigateToXxx() trong MainViewModel
+    -->
+
+    <!--
+    ═══════════════════════════════════════════════════════════
+    ROUTE TABLE – Ánh xạ ViewModel → View
+    (Giống cấu hình routes trong React Router)
+    ═══════════════════════════════════════════════════════════
+    -->
+    <Window.Resources>
+
+        <!-- Nạp file style chung -->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/GUI/Resource/AppStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Route: LandingViewModel → LandingPage -->
+            <DataTemplate DataType="{x:Type vm:LandingViewModel}">
+                <pages:LandingPage/>
+            </DataTemplate>
+
+            <!-- Route: LoginViewModel → LoginPage -->
+            <DataTemplate DataType="{x:Type vm:LoginViewModel}">
+                <pages:LoginPage/>
+            </DataTemplate>
+
+            <!-- Route: MainLayoutViewModel → MainLayout (shell sau đăng nhập) -->
+            <DataTemplate DataType="{x:Type vm:MainLayoutViewModel}">
+                <pages:MainLayout/>
+            </DataTemplate>
+
+            <!-- Route: MangakaSeriesViewModel → MangakaSeriesPage -->
+            <DataTemplate DataType="{x:Type mangakaVm:MangakaSeriesViewModel}">
+                <mangakaPage:MangakaSeriesPage/>
+            </DataTemplate>
+
+            <!-- Route: TantouReviewViewModel → TantouReviewPage -->
+            <DataTemplate DataType="{x:Type tantouVm:TantouReviewViewModel}">
+                <tantouPage:TantouReviewPage/>
+            </DataTemplate>
+
+            <!-- Route: EditorialApprovalViewModel → EditorialApprovalPage -->
+            <DataTemplate DataType="{x:Type editorialVm:EditorialApprovalViewModel}">
+                <editorialPage:EditorialApprovalPage/>
+            </DataTemplate>
+
+            <!-- Route: PublishingScheduleViewModel → PublishingSchedulePage -->
+            <DataTemplate DataType="{x:Type editorialVm:PublishingScheduleViewModel}">
+                <editorialPage:PublishingSchedulePage/>
+            </DataTemplate>
+
+            <!-- Route: AdminAccountsViewModel → AdminAccountsPage -->
+            <DataTemplate DataType="{x:Type adminVm:AdminAccountsViewModel}">
+                <adminPage:AdminAccountsPage/>
+            </DataTemplate>
+
+            <!-- Route: ProfileViewModel → ProfilePage -->
+            <DataTemplate DataType="{x:Type sharedVm:ProfileViewModel}">
+                <sharedPage:ProfilePage/>
+            </DataTemplate>
+
+            <!--
+            TODO: Thêm route cho các trang khác ở đây.
+            Ví dụ:
+            <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+                <pages:DashboardPage/>
+            </DataTemplate>
+            -->
+
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <!--
+    ═══════════════════════════════════════════════════════════
+    CONTENT AREA – Render trang hiện tại
+    ContentControl tự động tìm DataTemplate phù hợp với
+    kiểu của CurrentPage và hiển thị View tương ứng.
+    ═══════════════════════════════════════════════════════════
+    -->
+    <ContentControl Content="{Binding CurrentPage}"/>
+
+</Window>

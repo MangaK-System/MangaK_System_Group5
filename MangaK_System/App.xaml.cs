@@ -1,4 +1,4 @@
-﻿using System.Configuration;
+using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Windows;
@@ -10,6 +10,11 @@ using Microsoft.Extensions.DependencyInjection;
 // Khái báo using ở đây
 using CloudinaryService = MangaK_System.BLL.CloudinaryService;
 using MediaService = MangaK_System.BLL.MediaService;
+using SeriesService = MangaK_System.BLL.Series;
+using PublishingScheduleService = MangaK_System.BLL.PublishingSchedule;
+using UserService = MangaK_System.BLL.User;
+using FeedbackService = MangaK_System.BLL.Feedback;
+using CategoryService = MangaK_System.BLL.Category;
 
 namespace MangaK_System
 {
@@ -30,20 +35,24 @@ namespace MangaK_System
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
+            // Đăng ký IConfiguration vào DI container
+            services.AddSingleton<IConfiguration>(configuration);
+
             // =============================
             // Database
             // =============================
             services.AddDbContext<AppDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             // =============================
             // Đăng ký Service ở đây
             // =============================
-            //vd: services.AddScoped<ISeriesService, SeriesService>();
+            services.AddScoped<SeriesService.ISeriesService, SeriesService.SeriesService>();
+            services.AddScoped<PublishingScheduleService.IPublishingScheduleService, PublishingScheduleService.PublishingScheduleService>();
             services.AddScoped<MediaService.IService, CloudinaryService.Service>();
-
-
-
+            services.AddScoped<UserService.IUserService, UserService.UserService>();
+            services.AddScoped<FeedbackService.IFeedbackService, FeedbackService.FeedbackService>();
+            services.AddScoped<CategoryService.IService, CategoryService.Service>();
             //==============================
             ServiceProvider = services.BuildServiceProvider();
 
