@@ -7,5 +7,6 @@ namespace MangaK_System.BLL.User
     public interface IUserService
     {
         Task<Mangak_System._1_DAL.Entity.User?> LoginAsync(string email, string password);
+        Task<Mangak_System._1_DAL.Entity.User?> GetProfileAsync(Guid userId);
     }
 }

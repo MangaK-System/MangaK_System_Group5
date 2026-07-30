@@ -37,5 +37,18 @@ namespace MangaK_System.BLL.User
 
             return user;
         }
+
+        public async Task<Mangak_System._1_DAL.Entity.User?> GetProfileAsync(Guid userId)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Id == userId);
+            
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User not found.");
+            }
+
+            return user;
+        }
     }
 }
