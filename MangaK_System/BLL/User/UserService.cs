@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Mangak_System._1_DAL.Data;
@@ -17,38 +19,41 @@ namespace MangaK_System.BLL.User
 
         public async Task<Mangak_System._1_DAL.Entity.User?> LoginAsync(string email, string password)
         {
-            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
-            {
-                throw new ArgumentException("Email and password cannot be empty.");
-            }
-
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == email);
-
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (user == null)
-            {
-                throw new UnauthorizedAccessException("Email not found.");
-            }
+                return null;
 
-            if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
-            {
-                throw new UnauthorizedAccessException("Incorrect password.");
-            }
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
+            if (!isPasswordValid)
+                return null;
 
             return user;
         }
 
         public async Task<Mangak_System._1_DAL.Entity.User?> GetProfileAsync(Guid userId)
         {
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Id == userId);
-            
-            if (user == null)
-            {
-                throw new KeyNotFoundException("User not found.");
-            }
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        }
 
-            return user;
+        public async Task<List<Mangak_System._1_DAL.Entity.User>> GetAllUsersAsync()
+        {
+            return await _context.Users
+                .Include(u => u.Supervisor)
+                .OrderBy(u => u.Role)
+                .ThenBy(u => u.FirstName)
+                .ToListAsync();
+        }
+
+        public async Task<bool> UpdateSupervisorAsync(Guid userId, Guid? supervisorId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return false;
+
+            user.SupervisorId = supervisorId;
+            user.UpdatedAt = DateTimeOffset.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

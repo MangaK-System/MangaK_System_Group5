@@ -104,10 +104,17 @@ namespace MangaK_System.GUI.ViewModels
 
             // Khởi tạo topbar với thông tin người dùng
             TopBar = new TopBarViewModel(mainViewModel, roleName, avatarUrl);
+            TopBar.OnProfileRequested = NavigateToProfile;
 
             // Mở trang mặc định ban đầu dựa theo role (bỏ Dashboard)
             string defaultKey = role == UserRole.Admin ? "accounts" : "series";
             HandleNavigation(defaultKey, role);
+        }
+
+        private void NavigateToProfile()
+        {
+            CurrentContent = new Shared.ProfileViewModel();
+            SetPageHeader("User Profile Settings", "View and edit your personal account details.");
         }
 
         /// <summary>

@@ -46,6 +46,11 @@ namespace MangaK_System.GUI.ViewModels
 
         // ─── Commands ─────────────────────────────────────────
 
+        /// <summary>
+        /// Callback được gọi khi người dùng chọn mục Profile trong menu hamburger.
+        /// </summary>
+        public Action? OnProfileRequested { get; set; }
+
         /// <summary>Mở/đóng dropdown menu (Profile, Logout)</summary>
         public ICommand ToggleMenuDropdownCommand { get; }
 
@@ -79,6 +84,7 @@ namespace MangaK_System.GUI.ViewModels
             GoToProfileCommand = new RelayCommand(_ =>
             {
                 IsMenuDropdownOpen = false;
+                OnProfileRequested?.Invoke();
             });
 
             // Đăng xuất → giải phóng session và quay về Landing
