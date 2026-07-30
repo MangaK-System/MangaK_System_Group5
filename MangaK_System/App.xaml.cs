@@ -1,4 +1,4 @@
-﻿using System.Configuration;
+using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Windows;
@@ -34,7 +34,7 @@ namespace MangaK_System
             // Database
             // =============================
             services.AddDbContext<AppDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             // =============================
             // Đăng ký Service ở đây
